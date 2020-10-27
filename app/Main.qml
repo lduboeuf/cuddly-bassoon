@@ -10,10 +10,6 @@ import QtSystemInfo 5.5
 MainView {
     id:window
 
-//    ScreenSaver {
-//        id: screenSaver
-//        screenSaverEnabled: !(Qt.application.active)
-//    }
     objectName: "mainView"
     theme.name: "Ubuntu.Components.Themes.SuruDark"
 
@@ -46,17 +42,17 @@ MainView {
             property alias dataPath: webContext.persistentStoragePath
 
             dataPath: dataLocation
+            //enable to store cookie
             offTheRecord: false
 
             httpUserAgent: "Mozilla/5.0 (Linux; Android 8.0.0; Pixel Build/OPR3.170623.007) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.98 Mobile Safari/537.36"
         }
 
-        url: "http://www.youtube.com"
+        url: "https://www.youtube.com"
         userScripts: [
             WebEngineScript {
-                injectionPoint: WebEngineScript.DocumentCreation
-                worldId: WebEngineScript.MainWorld
-                name: "QWebChannel"
+                injectionPoint: WebEngineScript.DocumentReady
+                worldId: WebEngineScript.ApplicationWorld
                 sourceUrl: "ubuntutheme.js"
             }
         ]
