@@ -63,9 +63,10 @@ MainView {
             }
         }
     }
+
     RadialBottomEdge {
         id: nav
-        visible: true
+        visible: window.loaded
         actions: [
             RadialAction {
                 id: reload
