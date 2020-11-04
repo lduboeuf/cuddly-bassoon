@@ -2,6 +2,7 @@ import QtQuick 2.9
 import Ubuntu.Components 1.3
 import QtQuick.Window 2.2
 import Morph.Web 0.1
+import QtQuick.Controls 2.2
 import QtWebEngine 1.7
 import "UCSComponents"
 import Qt.labs.settings 1.0
@@ -26,13 +27,14 @@ MainView {
 
         settings.fullScreenSupportEnabled: true
         property var currentWebview: webview
+        property ContextMenuRequest contextMenuRequest: null
         settings.pluginsEnabled: true
 
         backgroundColor: theme.palette.normal.background
 
         onFullScreenRequested: function(request) {
             nav.visible = !nav.visible
-
+            console.log("olala fullscreen")
             request.accept();
         }
 
@@ -58,11 +60,77 @@ MainView {
         ]
 
         onLoadingChanged: {
-            if (loadRequest.status === WebEngineLoadRequest.LoadSucceededStatus) {
+            if (loadRequest.status === WebEngineLoadRequest.LoadSucceededStatus || loadRequest.status === WebEngineLoadRequest.LoadFailedStatus) {
                 window.loaded = true
             }
         }
+
+        //handle click on links
+        onNewViewRequested: function(request) {
+            console.log(request.destination, request.requestedUrl)
+
+            var url = request.requestedUrl.toString()
+            //handle redirection links
+            if (url.startsWith('https://www.youtube.com')) {
+                //get query params
+                var reg = new RegExp('[?&]q=([^&#]*)', 'i');
+                var param = reg.exec(url);
+                if (param) {
+                    console.log("url to open:", decodeURIComponent(param[1]))
+                    Qt.openUrlExternally(decodeURIComponent(param[1]))
+                } else {
+                    Qt.openUrlExternally(url)
+                }
+            } else {
+                Qt.openUrlExternally(url)
+            }
+
+
+        }
+
+
+        onContextMenuRequested: function(request) {
+            console.log("kikou contextMenu")
+            if (!Qt.inputMethod.visible) { //don't open it on when address bar is open
+                request.accepted = true;
+                contextMenuRequest = request
+                contextMenu.x = request.x;
+                contextMenu.y = request.y;
+                contextMenu.open();
+            }
+
+
+        }
+
     }
+
+    Menu {
+        id: contextMenu
+
+        MenuItem {
+            id: copyItem
+            text: i18n.tr("Copy URL")
+            enabled: webview.contextMenuRequest
+            onTriggered: {
+                console.log(webview.contextMenuRequest.linkUrl.toString())
+                var url = ''
+                if (webview.contextMenuRequest.linkUrl.toString().length > 0) {
+                    url = webview.contextMenuRequest.linkUrl.toString()
+                } else {
+                    //when clicking on the video
+                    url = webview.url
+                }
+
+                Clipboard.push(url)
+                webview.contextMenuRequest = null;
+            }
+        }
+
+
+
+    }
+
+
 
     RadialBottomEdge {
         id: nav
@@ -165,23 +233,6 @@ MainView {
         target: Qt.inputMethod
         onVisibleChanged: nav.visible = !nav.visible
     }
-    
-    Connections {
-        target: webview
-
-        onIsFullScreenChanged: {
-            console.log('onIsFullScreenChanged:')
-            window.setFullscreen()
-            if (currentWebview.isFullScreen) {
-
-                nav.state = "hidden"
-            }
-            else {
-
-                nav.state = "shown"
-            }
-        }
-    }
 
 
     Connections {
@@ -210,21 +261,5 @@ MainView {
     }
 
 
-    function setFullscreen(fullscreen) {
-        if (!window.forceFullscreen) {
-            if (fullscreen) {
-                if (window.visibility != Window.FullScreen) {
-                    console.log('hello fullscreen')
-                    internal.currentWindowState = window.visibility
-                    window.visibility = 5
-                }
-            } else {
-                console.log('hello fullscreen', fullscreen)
-                window.visibility = internal.currentWindowState
-                //window.currentWebview.fullscreen = false
-                //window.currentWebview.fullscreen = false
-            }
-        }
-    }
 
 }
