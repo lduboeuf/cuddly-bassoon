@@ -93,8 +93,8 @@ ApplicationWindow {
          }
 
          onLoadingChanged: {
-             //if (loadRequest.status === WebEngineLoadRequest.LoadSucceededStatus) {
-             if (loadRequest.status === WebEngineLoadRequest.LoadStartedStatus) {
+             if (loadRequest.status === WebEngineLoadRequest.LoadSucceededStatus) {
+             //if (loadRequest.status === WebEngineLoadRequest.LoadStartedStatus) {
                  window.loaded = true
              } else if (loadRequest.status === WebEngineLoadRequest.LoadFailedStatus) {
                 window.onError = true
@@ -240,13 +240,13 @@ ApplicationWindow {
         //Behavior on opacity {
         //    NumberAnimation {}
         //}
-/*
+
         ActivityIndicator{
             id:loadingflg
             anchors.centerIn: parent
             running: splashScreen.visible
         }
-*/
+
         states: [
             State { when: !window.loaded && !window.onError;
                 PropertyChanges { target: splashScreen; opacity: 1.0 }
