@@ -13,6 +13,7 @@ ApplicationWindow {
     id: window
     visible: true
     color: "transparent"
+    //color: "#111111"
 
     ScreenSaver {
         id: screenSaver
@@ -25,6 +26,7 @@ ApplicationWindow {
 
     objectName: "mainView"
     property bool loaded: false
+    property bool onError: false
 
 
     property QtObject defaultProfile: WebEngineProfile {
@@ -45,16 +47,18 @@ ApplicationWindow {
            }
        ]
 
-        httpUserAgent: "Mozilla/5.0 (Linux; Android 12; Ubuntu Touch) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Mobile Safari/537.36"
+
+        httpUserAgent: "Mozilla/5.0 (Linux; Ubuntu 20.04 like Android 9) AppleWebKit/537.36 Chrome/87.0.4280.144 Mobile Safari/537.36"
 
     }
 
     WebView {
 
         id: webview
-    anchors.fill: parent
-        backgroundColor: "transparent"
-        url: "https://m.youtube.com"
+        anchors.fill: parent
+        //backgroundColor: "#111111"
+        //backgroundColor: "transparent"
+        url: "https://m.youtube.com/"
 
 
 
@@ -89,8 +93,11 @@ ApplicationWindow {
          }
 
          onLoadingChanged: {
-             if (loadRequest.status === WebEngineLoadRequest.LoadSucceededStatus) {
+             //if (loadRequest.status === WebEngineLoadRequest.LoadSucceededStatus) {
+             if (loadRequest.status === WebEngineLoadRequest.LoadStartedStatus) {
                  window.loaded = true
+             } else if (loadRequest.status === WebEngineLoadRequest.LoadFailedStatus) {
+                window.onError = true
              }
          }
 
@@ -153,12 +160,13 @@ ApplicationWindow {
 
   RadialBottomEdge {
         id: nav
-        visible: window.loaded
+        visible: window.loaded || window.onError
         actions: [
             RadialAction {
                 id: reload
                 iconName: "reload"
                 onTriggered: {
+                    window.onError = false
                     webview.reload()
                 }
                 text: i18n.tr("Reload")
@@ -221,9 +229,38 @@ ApplicationWindow {
         ]
     }
 
+ Rectangle {
+        id: splashScreen
+        color: "#111111"
+        //color: "transparent"
+        //visible: false
+       // opacity: window.loaded || window.onError ? 0.0 : 1.0
+        anchors.fill: parent
 
+        //Behavior on opacity {
+        //    NumberAnimation {}
+        //}
+/*
+        ActivityIndicator{
+            id:loadingflg
+            anchors.centerIn: parent
+            running: splashScreen.visible
+        }
+*/
+        states: [
+            State { when: !window.loaded && !window.onError;
+                PropertyChanges { target: splashScreen; opacity: 1.0 }
+            },
+            State { when: window.loaded || window.onError;
+                PropertyChanges { target: splashScreen; opacity: 0.0 }
+            }
+        ]
 
+        transitions: Transition {
+            NumberAnimation { property: "opacity"; duration: 1000}
+        }
 
+    }
 
 
     Connections {
