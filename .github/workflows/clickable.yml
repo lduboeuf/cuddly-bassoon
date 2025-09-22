@@ -25,16 +25,13 @@ on:
     tags: releases/[1-9]+.[0-9]+.[0-9]+
   pull_request:
     branches: [ main ]
-  workflow_dispatch:
 
 jobs:
   ubuntu-touch:
     strategy:
-      fail-fast: false
       matrix:
-         build: [Release]
-         arch: [armhf, arm64, amd64]
-         framework: [ubuntu-sdk-20.04]
+         arch: [amd64, arm64, armhf]
+         framework: [ubuntu-touch-24.04-1.x, ubuntu-sdk-20.04]
 
     runs-on: ubuntu-latest
     steps:
