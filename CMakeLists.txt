@@ -6,11 +6,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Werror")
 find_package(Qt5Core)
 find_package(Qt5Qml)
 find_package(Qt5Quick)
-find_package(Qt5QuickCompiler)
 
 # Automatically create moc files
 set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
 
 # Components PATH
 execute_process(
@@ -39,7 +37,7 @@ else()
     )
 endif()
 
-qtquick_compiler_add_resources(RESOURCES main.qrc)
+qt_add_resources(RESOURCES main.qrc)
 
 add_executable(${PROJECT_NAME} main.cpp ${RESOURCES})
 qt5_use_modules(${PROJECT_NAME} Gui Qml Quick QuickControls2)
