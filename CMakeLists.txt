@@ -29,7 +29,7 @@ else()
     )
 endif()
 
-qt_add_resources(RESOURCES main.qrc)
+qt5_add_resources(RESOURCES main.qrc)
 
 add_executable(${PROJECT_NAME} main.cpp ${RESOURCES})
 qt5_use_modules(${PROJECT_NAME} Gui Qml Quick QuickControls2)
