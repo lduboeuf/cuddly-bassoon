@@ -1,6 +1,6 @@
 {
     "name": "youtube-web.mateo-salta",
-    "description": "description of youtube-morphc",
+    "description": "Youtube webapp",
 
     "title": "youtube-web",
     "architecture": "@CLICK_ARCH@",

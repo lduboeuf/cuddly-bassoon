@@ -42,7 +42,8 @@ jobs:
         run: python3 -m pip install clickable-ut --upgrade
 
       - name: Build
-        run: CLICKABLE_FRAMEWORK=${{ matrix.framework }} clickable build --arch ${{ matrix.arch }}
+        run: |
+          CLICKABLE_FRAMEWORK=${{ matrix.framework }} clickable build --arch ${{ matrix.arch }}
 
       - name: Upload .click to artifact
         uses: actions/upload-artifact@v4
