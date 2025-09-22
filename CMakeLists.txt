@@ -10,14 +10,6 @@ find_package(Qt5Quick)
 # Automatically create moc files
 set(CMAKE_AUTOMOC ON)
 
-# Components PATH
-execute_process(
-    COMMAND dpkg-architecture -qDEB_HOST_MULTIARCH
-    OUTPUT_VARIABLE ARCH_TRIPLET
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-
-set(QT_IMPORTS_DIR "lib/${ARCH_TRIPLET}")
 
 set(PROJECT_NAME "youtube-web")
 set(FULL_PROJECT_NAME "youtube-web.mateo-salta")

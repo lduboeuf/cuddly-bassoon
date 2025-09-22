@@ -8,10 +8,6 @@
 #include <QQmlApplicationEngine>
 #include <QQuickView>
 #include <QVector>
-#include <QtWebEngine/qtwebengineglobal.h>
-
-
-
 
 int main(int argc, char** argv) {
     QGuiApplication::setOrganizationName("youtube-web.mateo-salta");
