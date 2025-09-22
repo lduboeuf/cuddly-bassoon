@@ -1,5 +1,0 @@
-{
-  "builder": "cmake",
-  "clickable_minimum_required": "8.4.0",
-  "kill": "youtube-web"
-}
