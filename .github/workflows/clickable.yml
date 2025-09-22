@@ -50,7 +50,7 @@ jobs:
       - name: Upload .click to artifact
         uses: actions/upload-artifact@v4
         with:
-          name: "youtube-web-${{ matrix.arch }}--click"
+          name: "youtube-web-${{ matrix.arch }}.click"
           path: "build/*/app/*.click"
           if-no-files-found: ignore
 
